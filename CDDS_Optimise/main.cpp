@@ -21,9 +21,12 @@
 
 #include "raylib.h"
 #include "raymath.h"
+
+#include "Critter.h"
+
+
 #include <random>
 #include <time.h>
-#include "Critter.h"
 
 int main(int argc, char* argv[])
 {
@@ -49,7 +52,7 @@ int main(int argc, char* argv[])
     for (int i = 0; i < CRITTER_COUNT; i++)
     {
         // create a random direction vector for the velocity
-        Vector2 velocity = { -100+(rand()%200), -100+(rand()%200) };
+        Vector2 velocity = { -100 + (rand() % 200), -100 + (rand() % 200) };
         // normalize and scale by a random speed
         velocity = Vector2Scale(Vector2Normalize(velocity), MAX_VELOCITY);
 
@@ -82,19 +85,23 @@ int main(int argc, char* argv[])
         // update the destroyer
         destroyer.Update(delta);
         // check each critter against screen bounds
-        if (destroyer.GetX() < 0) {
+        if (destroyer.GetX() < 0) 
+        {
             destroyer.SetX(0);
             destroyer.SetVelocity(Vector2{ -destroyer.GetVelocity().x, destroyer.GetVelocity().y });
         }
-        if (destroyer.GetX() > screenWidth) {
+        if (destroyer.GetX() > screenWidth) 
+        {
             destroyer.SetX(screenWidth);
             destroyer.SetVelocity(Vector2{ -destroyer.GetVelocity().x, destroyer.GetVelocity().y });
         }
-        if (destroyer.GetY() < 0) {
+        if (destroyer.GetY() < 0) 
+        {
             destroyer.SetY(0);
             destroyer.SetVelocity(Vector2{ destroyer.GetVelocity().x, -destroyer.GetVelocity().y });
         }
-        if (destroyer.GetY() > screenHeight) {
+        if (destroyer.GetY() > screenHeight) 
+        {
             destroyer.SetY(screenHeight);
             destroyer.SetVelocity(Vector2{ destroyer.GetVelocity().x, -destroyer.GetVelocity().y });
         }
@@ -106,19 +113,23 @@ int main(int argc, char* argv[])
             critters[i].Update(delta);
 
             // check each critter against screen bounds
-            if (critters[i].GetX() < 0) {
+            if (critters[i].GetX() < 0) 
+            {
                 critters[i].SetX(0);
                 critters[i].SetVelocity(Vector2{ -critters[i].GetVelocity().x, critters[i].GetVelocity().y });
             }
-            if (critters[i].GetX() > screenWidth) {
+            if (critters[i].GetX() > screenWidth) 
+            {
                 critters[i].SetX(screenWidth);
                 critters[i].SetVelocity(Vector2{ -critters[i].GetVelocity().x, critters[i].GetVelocity().y });
             }
-            if (critters[i].GetY() < 0) {
+            if (critters[i].GetY() < 0) 
+            {
                 critters[i].SetY(0);
                 critters[i].SetVelocity(Vector2{ critters[i].GetVelocity().x, -critters[i].GetVelocity().y });
             }
-            if (critters[i].GetY() > screenHeight) {
+            if (critters[i].GetY() > screenHeight) 
+            {
                 critters[i].SetY(screenHeight);
                 critters[i].SetVelocity(Vector2{ critters[i].GetVelocity().x, -critters[i].GetVelocity().y });
             }
@@ -154,7 +165,8 @@ int main(int argc, char* argv[])
 
                     // we still want to check for collisions in the case where 1 critter is dirty - so we need a check 
                     // to make sure the other critter is clean before we do the collision response
-                    if (!critters[j].IsDirty()) {
+                    if (!critters[j].IsDirty()) 
+                    {
                         critters[j].SetVelocity(Vector2Scale(normal, MAX_VELOCITY));
                         critters[j].SetDirty();
                     }
@@ -199,7 +211,7 @@ int main(int argc, char* argv[])
         }
         // draw the destroyer
         // (if you're wondering why it looks a little odd when sometimes critters are destroyed when they're not quite touching the 
-        // destroyer, it's because the origin is at the top-left. ...you could fix that!)
+        // destroyer, it's because the origin is at the top-left. ...you could fix that!) 
         destroyer.Draw();
 
         DrawFPS(10, 10);

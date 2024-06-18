@@ -70,6 +70,7 @@ bool CDDS_AlgorithmsApp::checkForWin()
 			// diagonal up and left
 			if (x - 3 >= 0 && y + 3 >= ROWS && tile == m_board[x - 1][y + 1] && tile == m_board[x - 2][y + 2] && tile == m_board[x - 3][y + 3])
 				return true;
+			
 		}
 	}
 	return false;
