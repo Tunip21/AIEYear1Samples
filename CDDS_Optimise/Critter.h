@@ -42,5 +42,7 @@ public:
 
 	bool IsDead() { return m_isLoaded == false; }
 
+	Critter* allocate(int max, Critter* pool);
+
 };
 

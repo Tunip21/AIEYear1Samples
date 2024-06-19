@@ -28,6 +28,19 @@
 #include <random>
 #include <time.h>
 
+
+float MagnitudeSqr(Vector2 a, Vector2 b)
+{
+    return ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
+}
+//float MagnitudeSqr(Vector2 a)
+//{
+//    return (a.x * a.x + a.y * a.y);
+//}
+//float Vector2LengthMagSqr(Vector2 v)
+//{
+//    return (v.x * v.x + v.y * v.y);
+//}
 int main(int argc, char* argv[])
 {
     // Initialization
@@ -42,8 +55,10 @@ int main(int argc, char* argv[])
 
     srand(time(NULL));
 
-
-    Critter critters[1000]; 
+    bool active = false;
+    int maxCritters = 1000;
+    Critter* critterPool = new Critter[maxCritters];
+    //Critter critters[1000]; 
 
     // create some critters
     const int CRITTER_COUNT = 50;
@@ -136,8 +151,10 @@ int main(int argc, char* argv[])
 
             // kill any critter touching the destroyer
             // simple circle-to-circle collision check
-            float dist = Vector2Distance(critters[i].GetPosition(), destroyer.GetPosition());
-            if (dist < critters[i].GetRadius() + destroyer.GetRadius())
+            //float dist = Vector2Distance(critters[i].GetPosition(), destroyer.GetPosition());
+            float dist = MagnitudeSqr(critters[i].GetPosition(), destroyer.GetPosition());
+            //if (dist < critters[i].GetRadius() + destroyer.GetRadius())
+            if (dist < critters[i].GetRadius() * critters[i].GetRadius() + destroyer.GetRadius() * destroyer.GetRadius())
             {
                 critters[i].Destroy();
                 // this would be the perfect time to put the critter into an object pool
@@ -151,8 +168,10 @@ int main(int argc, char* argv[])
                 if (i == j || critters[i].IsDirty()) // note: the other critter (j) could be dirty - that's OK
                     continue;
                 // check every critter against every other critter
-                float dist = Vector2Distance(critters[i].GetPosition(), critters[j].GetPosition());
-                if (dist < critters[i].GetRadius() + critters[j].GetRadius())
+                float dist = MagnitudeSqr(critters[i].GetPosition(), critters[j].GetPosition()); //Vector2Distance edit
+                //float dist = Vector2Distance(critters[i].GetPosition(), critters[j].GetPosition());
+                if (dist < critters[i].GetRadius() * critters[i].GetRadius() + critters[j].GetRadius() * critters[j].GetRadius()) //squared edit
+                //if (dist < critters[i].GetRadius() + critters[j].GetRadius())
                 {
                     // collision!
                     // do math to get critters bouncing

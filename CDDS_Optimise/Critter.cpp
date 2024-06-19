@@ -51,3 +51,14 @@ void Critter::Draw()
 
 	DrawTexture(m_texture, m_position.x, m_position.y, WHITE);
 }
+
+Critter* Critter::allocate(int max, Critter* pool)
+{
+	for (int n = 0; n < max; ++n)
+	{
+		if (pool[n].IsDead() == true)
+		{
+			pool[n].IsDead() = false;
+		}
+	}
+}

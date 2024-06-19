@@ -253,6 +253,8 @@ RMDEF Vector2 Vector2DivideV(Vector2 v1, Vector2 v2)
 // Normalize provided vector
 RMDEF Vector2 Vector2Normalize(Vector2 v)
 {
+   /* Vector2 result = Vector2Divide(MagnitudeSqr(v), Vector2LengthMagSqr(v));
+    return result;*/
     Vector2 result = Vector2Divide(v, Vector2Length(v));
     return result;
 }
