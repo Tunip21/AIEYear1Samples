@@ -23,7 +23,7 @@
 #include "raymath.h"
 
 #include "Critter.h"
-
+#include "ObjectPool.h"
 
 #include <random>
 #include <time.h>
@@ -47,22 +47,25 @@ int main(int argc, char* argv[])
     //--------------------------------------------------------------------------------------
     int screenWidth = 800;
     int screenHeight = 450;
-
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+
+    Texture2D critterTexture = LoadTexture("res/10.png");
+    Texture2D destroyerTexture = LoadTexture("res/9.png");
 
     //SetTargetFPS(60);
     //--------------------------------------------------------------------------------------
 
     srand(time(NULL));
 
-    bool active = false;
-    int maxCritters = 1000;
-    Critter* critterPool = new Critter[maxCritters];
-    //Critter critters[1000]; 
+    
+
+    Critter critters[1000]; 
 
     // create some critters
     const int CRITTER_COUNT = 50;
     const int MAX_VELOCITY = 80;
+
+    ObjectPool<class Critter> critterPool(CRITTER_COUNT);
 
     for (int i = 0; i < CRITTER_COUNT; i++)
     {
@@ -72,17 +75,20 @@ int main(int argc, char* argv[])
         velocity = Vector2Scale(Vector2Normalize(velocity), MAX_VELOCITY);
 
         // create a critter in a random location
+
         critters[i].Init(
             { (float)(5+rand() % (screenWidth-10)), (float)(5+(rand() % screenHeight-10)) },
             velocity,
-            12, "res/10.png");
+            12, &critterTexture); //used to be .png
+
+        //critterPool.allocate();
     }
 
 
     Critter destroyer;
     Vector2 velocity = { -100 + (rand() % 200), -100 + (rand() % 200) };
     velocity = Vector2Scale(Vector2Normalize(velocity), MAX_VELOCITY);
-    destroyer.Init(Vector2{ (float)(screenWidth >> 1), (float)(screenHeight >> 1) }, velocity, 20, "res/9.png");
+    destroyer.Init(Vector2{ (float)(screenWidth >> 1), (float)(screenHeight >> 1) }, velocity, 20, &destroyerTexture);
 
     float timer = 1;
     Vector2 nextSpawnPos = destroyer.GetPosition();
@@ -210,7 +216,7 @@ int main(int argc, char* argv[])
                     Vector2 pos = destroyer.GetPosition();
                     pos = Vector2Add(pos, Vector2Scale(normal, -50));
                     // its pretty ineficient to keep reloading textures. ...if only there was something else we could do
-                    critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, "res/10.png");
+                    critters[i].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, &critterTexture);
                     break;
                 }
             }
