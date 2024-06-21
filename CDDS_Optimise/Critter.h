@@ -9,6 +9,7 @@ protected:
 	Vector2 m_position;
 	Vector2 m_velocity;
 	float m_radius;
+	int numDead;
 
 	Texture2D m_texture;
 
@@ -19,8 +20,9 @@ public:
 	Critter();
 	~Critter();
 
-	void Init(Vector2 position, Vector2 velocity, float radius, Texture2D* texture);
-	void Destroy();
+	void Init(Vector2 position, Vector2 velocity, float radius, Texture2D texture, Critter critterArray[], int CRITTER_COUNT);
+	void Init(Vector2 position, Vector2 velocity, float radius, Texture2D texture);
+	void Destroy(Critter critterArray[], int CRITTER_COUNT);
 	void Update(float dt);
 	void Draw();
 
@@ -41,6 +43,9 @@ public:
 	void SetDirty() { m_isDirty = true; }
 
 	bool IsDead() { return m_isLoaded == false; }
+
+	void EndOfArray(Critter critterArray[], int CRITTER_COUNT);
+	void BeginOfArray(Critter critterArray[], int CRITTER_COUNT);
 
 
 };
