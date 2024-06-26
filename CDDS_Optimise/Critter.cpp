@@ -22,7 +22,6 @@ void Critter::Init(Vector2 position, Vector2 velocity, float radius, Texture2D t
 	m_velocity = velocity;
 	m_radius = radius;
 	m_texture = texture;
-	//m_texture = LoadTexture(texture);	
 
 	m_isLoaded = true;
 	this->BeginOfArray(critterArray, CRITTER_COUNT);
@@ -71,10 +70,9 @@ void Critter::Draw()
 void Critter::EndOfArray(Critter critterArray[], int CRITTER_COUNT)
 {
 	
-	for (int n = CRITTER_COUNT; n != 2; --n)
+	for (int n = 0; n < CRITTER_COUNT; ++n)
 	{
-		critterArray[n - 1] = critterArray[n - 2];
-		
+		critterArray[n] = critterArray[n + 1];
 	}
 	critterArray[CRITTER_COUNT - 1] = *this;
 	
@@ -82,9 +80,9 @@ void Critter::EndOfArray(Critter critterArray[], int CRITTER_COUNT)
 
 void Critter::BeginOfArray(Critter critterArray[], int CRITTER_COUNT)
 {
-	for (int n = 0; n != CRITTER_COUNT - 1; ++n)
+	for (int n = CRITTER_COUNT - 1; n > 0; --n)
 	{
-		critterArray[n] = critterArray[n + 1];
+		critterArray[n] = critterArray[n - 1];
 	}
 	critterArray[0] = *this;
 }
