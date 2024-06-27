@@ -20,9 +20,8 @@ public:
 	Critter();
 	~Critter();
 
-	void Init(Vector2 position, Vector2 velocity, float radius, Texture2D texture, Critter critterArray[], int CRITTER_COUNT);
 	void Init(Vector2 position, Vector2 velocity, float radius, Texture2D texture);
-	void Destroy(Critter critterArray[], int CRITTER_COUNT);
+	void Destroy();
 	void Update(float dt);
 	void Draw();
 
@@ -44,8 +43,6 @@ public:
 
 	bool IsDead() { return m_isLoaded == false; }
 
-	void EndOfArray(Critter critterArray[], int CRITTER_COUNT);
-	void BeginOfArray(Critter critterArray[], int CRITTER_COUNT);
 
 
 };
