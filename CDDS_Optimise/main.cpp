@@ -66,6 +66,7 @@ int main(int argc, char* argv[])
 
     Texture2D critterTexture = LoadTexture("res/10.png");
     Texture2D destroyerTexture = LoadTexture("res/9.png");
+    //Quadtree critterTree;
 
 
     //SetTargetFPS(60);
@@ -73,7 +74,7 @@ int main(int argc, char* argv[])
 
     srand(time(NULL));
 
-    Critter critters[1000]; 
+    Critter critters[1000];
 
     // create some critters
     const int CRITTER_COUNT = 50;
@@ -88,15 +89,18 @@ int main(int argc, char* argv[])
         Vector2 velocity = { -100 + (rand() % 200), -100 + (rand() % 200) };
         // normalize and scale by a random speed
         velocity = Vector2Scale(Vector2Normalize(velocity), MAX_VELOCITY);
-
         // create a critter in a random location
 
         critters[i].Init(
             { (float)(5+rand() % (screenWidth-10)), (float)(5+(rand() % screenHeight-10)) },
             velocity,
             12, critterTexture); //used to be .png
-
+        //critters[i] = new AABB(critters[i].GetPosition(), { 0, 0 });
     }
+
+    
+
+
     Critter destroyer;
     Vector2 velocity = { -100 + (rand() % 200), -100 + (rand() % 200) };
     velocity = Vector2Scale(Vector2Normalize(velocity), MAX_VELOCITY);
@@ -104,7 +108,7 @@ int main(int argc, char* argv[])
 
     float timer = 1;
     Vector2 nextSpawnPos = destroyer.GetPosition();
-
+    
 
      
     // Main game loop
@@ -169,7 +173,6 @@ int main(int argc, char* argv[])
                 critters[i].SetY(screenHeight);
                 critters[i].SetVelocity(Vector2{ critters[i].GetVelocity().x, -critters[i].GetVelocity().y });
             }
-        
             // kill any critter touching the destroyer
             // simple circle-to-circle collision check
             float dist = SquareDist(critters[i].GetPosition(), destroyer.GetPosition());
@@ -184,7 +187,7 @@ int main(int argc, char* argv[])
                 
         // check for critter-on-critter collisions
         for (int i = 0; i < CRITTER_COUNT - crittersDead; i++)
-        {            
+        {           
             for (int j = 0; j < CRITTER_COUNT - crittersDead; j++){
                 if (i == j || critters[i].IsDirty()) // note: the other critter (j) could be dirty - that's OK
                     continue;

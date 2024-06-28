@@ -1,5 +1,7 @@
 #include "Critter.h"
 
+//#include "../AI_Agents_IBehaviour/Game.h"
+
 
 Critter::Critter()
 {
@@ -17,11 +19,12 @@ Critter::~Critter()
 
 void Critter::Init(Vector2 position, Vector2 velocity, float radius, Texture2D texture) //const char* originally
 {
-	
 	m_position = position;
 	m_velocity = velocity;
 	m_radius = radius;
 	m_texture = texture;
+
+	//m_quadtree.Insert(new GameObject(&m_texture))
 
 	m_isLoaded = true;
 }

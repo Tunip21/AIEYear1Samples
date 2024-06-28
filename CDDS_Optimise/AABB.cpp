@@ -1,5 +1,9 @@
 #include "AABB.h"
 
+AABB::AABB()
+{
+}
+
 AABB::AABB(Vector2 centre, Vector2 halfSize)
 	: m_centre(centre), m_halfSize(halfSize)
 {

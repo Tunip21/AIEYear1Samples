@@ -1,23 +1,28 @@
 #include "Quadtree.h"
 #include "AABB.h"
-#include "GameObject.h"
 #include <memory>
 
-Quadtree::Quadtree() : m_objects(nullptr), m_children(nullptr)
+#include "Critter.h"
+
+Quadtree::Quadtree()
+: m_critters(nullptr), m_children(nullptr)
 {
 	m_boundary.m_halfSize.x = 1280 / 2;
 	m_boundary.m_halfSize.y = 720 / 2;
 	m_boundary.m_centre = m_boundary.m_halfSize;
 }
 
-Quadtree::Quadtree(AABB boundary) : m_boundary(boundary), m_objects(nullptr), m_children(nullptr)
+Quadtree::Quadtree(AABB boundary)
+: m_boundary(boundary), m_critters(nullptr), m_children(nullptr)
 {
 }
 
 Quadtree::~Quadtree()
 {
-	if (m_children != nullptr) {
-		for (int i = 0; i < 4; i++) {
+	if (m_children != nullptr) 
+	{
+		for (int i = 0; i < 4; i++) 
+		{
 			if (m_children[i] != nullptr)
 				delete m_children[i];
 		}
@@ -25,19 +30,21 @@ Quadtree::~Quadtree()
 		m_children = nullptr;
 	}
 
-	if (m_objects != nullptr) {
-		for (int i = 0; i < m_capacity; i++) {
-			if(m_objects[i] != nullptr)
-				delete m_objects[i];
+	if (m_critters != nullptr) 
+	{
+		for (int i = 0; i < m_capacity; i++) 
+		{
+			if (m_critters[i] != nullptr)
+				delete m_critters[i];
 		}
-		delete m_objects;
-		m_objects = nullptr;
+		delete m_critters;
+		m_critters = nullptr;
 	}
 }
 
 void Quadtree::Subdivide()
 {
-	m_children = new Quadtree*[4];
+	m_children = new Quadtree * [4];
 
 	Vector2 qSize{ m_boundary.m_halfSize.x / 2, m_boundary.m_halfSize.y / 2 };
 
@@ -53,48 +60,55 @@ void Quadtree::Subdivide()
 	qCentre = Vector2{ m_boundary.m_centre.x + qSize.x, m_boundary.m_centre.y + qSize.y };
 	m_children[BOTTOM_RIGHT] = new Quadtree(AABB(qCentre, qSize));
 
-	if (m_objects != nullptr) {
+	if (m_critters != nullptr) {
 		for (int i = 0; i < m_capacity; i++) {
-			if (m_objects[i] == nullptr)
+			if (m_critters[i] == nullptr)
 				continue;
 
 			// find a subtree to insert the object into
 			for (int j = 0; j < 4; j++) {
-				if (m_children[j]->Insert(m_objects[i]) == true)
+				if (m_children[j]->Insert(m_critters[i]) == true)
 					break;
 			}
-			// remove the gameobejct from the objects array for this node
-			// (dont delete it, just set it to null - the object still needs to 
+			// remove the gameobject from the objects array for this node
+			// (don't delete it, just set it to null - the object still needs to 
 			// exist in the child node)
-			m_objects[i] = nullptr;
+			m_critters[i] = nullptr;
 		}
 		// all of the objects that were stored in this node are now stored in the 
 		// child nodes, so delete the objects array.
-		delete m_objects;
-		m_objects = nullptr;
+		delete m_critters;
+		m_critters = nullptr;
 	}
 }
 
-bool Quadtree::Insert(GameObject* gameObject)
+bool Quadtree::Insert(Critter* gameObject)
 {
-	if (m_boundary.contains(gameObject->m_bounds.m_centre) == false)
+	//if (m_boundary.contains(gameObject.m_bounds.m_centre) == false)
+	if (m_boundary.contains(gameObject->m_position) == false)
+	{
 		return false;
+	}
 
 	// if this node doesn't have children (hasn't been subdivided), then try to
-	// insert the gameobject in this node's object lise
-	if (m_children == nullptr) {
+	// insert the gameobject in this node's object list
+	if (m_children == nullptr)
+	{
 		// is the objects array full?
-		if (m_objects == nullptr)
+		if (m_critters == nullptr)
 		{
-			m_objects = new GameObject*[m_capacity];
-			memset(m_objects, 0, sizeof(GameObject*)*m_capacity);
+			m_critters = new Critter * [m_capacity];
+			memset(m_critters, 0, sizeof(Critter*) * m_capacity);
 		}
-		if (m_objects[m_capacity - 1] == nullptr) {
+		if (m_critters[m_capacity - 1] == nullptr) 
+		{
 			// we have at least 1 free space, so step through the array and look for somewhere
 			// to insert the data
-			for (int i = 0; i < m_capacity; i++) {
-				if (m_objects[i] == nullptr) {
-					m_objects[i] = gameObject;
+			for (int i = 0; i < m_capacity; i++) 
+			{
+				if (m_critters[i] == nullptr) 
+				{
+					m_critters[i] = gameObject;
 					return true;
 				}
 			}
@@ -106,7 +120,8 @@ bool Quadtree::Insert(GameObject* gameObject)
 	}
 
 	// we couldn't insert the gameobject into this node, so find a child node to insert into
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < 4; i++) 
+	{
 		if (m_children[i]->Insert(gameObject) == true)
 			return true;
 	}
@@ -116,8 +131,9 @@ bool Quadtree::Insert(GameObject* gameObject)
 
 void Quadtree::Update(float deltaTime)
 {
-
 }
+
+
 
 void Quadtree::Draw()
 {
@@ -140,10 +156,10 @@ void Quadtree::Draw()
 		}
 	}
 
-	if (m_objects != nullptr) {
+	if (m_critters != nullptr) {
 		for (int i = 0; i < m_capacity; i++) {
-			if (m_objects[i] != nullptr)
-				m_objects[i]->Draw();
+			if (m_critters[i] != nullptr)
+				m_critters[i]->Draw();
 		}
 	}
 }

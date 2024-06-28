@@ -1,7 +1,7 @@
 #pragma once
 #include "AABB.h"
 
-class GameObject;
+class Critter;
 
 class Quadtree
 {
@@ -21,7 +21,7 @@ public:
 
 	~Quadtree();
 
-	bool Insert(GameObject*);
+	bool Insert(Critter*); //changed instances of gameobject with critter
 	void Subdivide();
 
 	void Update(float deltaTime);
@@ -31,6 +31,6 @@ private:
 	Quadtree** m_children;
 
 	AABB m_boundary;
-		
-	GameObject** m_objects;
+
+	Critter** m_critters;
 };

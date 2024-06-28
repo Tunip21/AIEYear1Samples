@@ -4,7 +4,7 @@
 class AABB
 {
 public:
-	AABB(); 
+	AABB();
 	AABB(Vector2 centre, Vector2 halfSize);
 
 	bool contains(Vector2 point);
