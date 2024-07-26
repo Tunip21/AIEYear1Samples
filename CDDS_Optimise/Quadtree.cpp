@@ -7,8 +7,8 @@
 Quadtree::Quadtree()
 : m_critters(nullptr), m_children(nullptr)
 {
-	m_boundary.m_halfSize.x = 1280 / 2;
-	m_boundary.m_halfSize.y = 720 / 2;
+	m_boundary.m_halfSize.x = 800 / 2;
+	m_boundary.m_halfSize.y = 450 / 2;
 	m_boundary.m_centre = m_boundary.m_halfSize;
 }
 
@@ -42,9 +42,34 @@ Quadtree::~Quadtree()
 	}
 }
 
+void Quadtree::Destroy()
+{
+	if (m_children != nullptr)
+	{
+		for (int i = 0; i < 4; i++)
+		{
+			if (m_children[i] != nullptr)
+				delete m_children[i];
+		}
+		delete m_children;
+		m_children = nullptr;
+	}
+
+	if (m_critters != nullptr)
+	{
+		for (int i = 0; i < m_capacity; i++)
+		{
+			if (m_critters[i] != nullptr)
+				delete m_critters[i];
+		}
+		delete m_critters;
+		m_critters = nullptr;
+	}
+}
+
 void Quadtree::Subdivide()
 {
-	m_children = new Quadtree * [4];
+	m_children = new Quadtree*[4];
 
 	Vector2 qSize{ m_boundary.m_halfSize.x / 2, m_boundary.m_halfSize.y / 2 };
 
@@ -62,7 +87,7 @@ void Quadtree::Subdivide()
 
 	if (m_critters != nullptr) {
 		for (int i = 0; i < m_capacity; i++) {
-			if (m_critters[i] == nullptr)
+			if (m_critters[i] == nullptr) 
 				continue;
 
 			// find a subtree to insert the object into
@@ -97,7 +122,7 @@ bool Quadtree::Insert(Critter* gameObject)
 		// is the objects array full?
 		if (m_critters == nullptr)
 		{
-			m_critters = new Critter * [m_capacity];
+			m_critters = new Critter* [m_capacity];
 			memset(m_critters, 0, sizeof(Critter*) * m_capacity);
 		}
 		if (m_critters[m_capacity - 1] == nullptr) 
@@ -129,8 +154,15 @@ bool Quadtree::Insert(Critter* gameObject)
 	return false;	// should never happen
 }
 
-void Quadtree::Update(float deltaTime)
+void Quadtree::Update(float deltaTime, Critter critters[])
 {
+	/*for (int n = 0; n != sizeof(critters); ++n)
+	{
+		if (critters[n].GetX() != m_critters[n]->GetX() && critters[n].GetX() != m_critters[n]->GetX())
+		{
+			return;
+		}
+	}*/
 }
 
 

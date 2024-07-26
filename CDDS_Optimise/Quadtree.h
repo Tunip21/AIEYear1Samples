@@ -21,16 +21,18 @@ public:
 
 	~Quadtree();
 
+	void Destroy();
+
 	bool Insert(Critter*); //changed instances of gameobject with critter
 	void Subdivide();
 
-	void Update(float deltaTime);
+	void Update(float deltaTime, Critter critters[]);
 	void Draw();
 
 private:
+	Critter** m_critters; 
 	Quadtree** m_children;
 
 	AABB m_boundary;
 
-	Critter** m_critters;
 };

@@ -56,6 +56,7 @@ Critter EndOfArray(Critter critterArray[], int CRITTER_COUNT, int critterDead)
 }
 
 
+
 int main(int argc, char* argv[])
 {
     // Initialization
@@ -75,6 +76,7 @@ int main(int argc, char* argv[])
     srand(time(NULL));
 
     Critter critters[1000];
+    Quadtree m_quadtree;
 
     // create some critters
     const int CRITTER_COUNT = 50;
@@ -95,7 +97,8 @@ int main(int argc, char* argv[])
             { (float)(5+rand() % (screenWidth-10)), (float)(5+(rand() % screenHeight-10)) },
             velocity,
             12, critterTexture); //used to be .png
-        //critters[i] = new AABB(critters[i].GetPosition(), { 0, 0 });
+
+        m_quadtree.Insert(&critters[i]);
     }
 
     
@@ -145,6 +148,10 @@ int main(int argc, char* argv[])
             destroyer.SetVelocity(Vector2{ destroyer.GetVelocity().x, -destroyer.GetVelocity().y });
         }
 
+
+        m_quadtree.Update(delta, critters);
+
+
         // update the critters
         // (dirty flags will be cleared during update)
         for (int i = 0; i < CRITTER_COUNT - crittersDead; i++)
@@ -179,6 +186,7 @@ int main(int argc, char* argv[])
             if (dist < critters[i].GetRadius() * critters[i].GetRadius() + destroyer.GetRadius() * destroyer.GetRadius())
             {
                 critters[i].Destroy();
+                m_quadtree.Destroy();
                 crittersDead++;
                 // this would be the perfect time to put the critter into an object pool
                 critters[CRITTER_COUNT - 1] = EndOfArray(critters, CRITTER_COUNT, i);
@@ -265,6 +273,9 @@ int main(int argc, char* argv[])
         destroyer.Draw();
 
         DrawFPS(10, 10);
+
+        m_quadtree.Draw();
+
         EndDrawing();
         //----------------------------------------------------------------------------------
     }
