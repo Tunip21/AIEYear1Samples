@@ -1,19 +1,21 @@
 #pragma once
 
-#include "Quadtree.h"
+//#include "Quadtree.h"
 #include "raylib.h"
+#include "AABB.h"
 
 class Critter
 {
 public:
 	Vector2 m_position;
+	AABB* gridPosition;
 
 protected:
 	Vector2 m_velocity;
 	float m_radius;
 	int numDead;
 
-	Quadtree m_quadtree;
+	//Quadtree m_quadtree;
 	Texture2D m_texture;
 
 	bool m_isLoaded;

@@ -8,6 +8,7 @@ Critter::Critter()
 	m_position = Vector2{ 0, 0 };
 	m_velocity = Vector2{ 0, 0 };
 	m_radius = 0;
+	gridPosition = nullptr;
 	m_isLoaded = false;
 }
 
@@ -15,6 +16,7 @@ Critter::~Critter()
 {
 	//UnloadTexture(m_texture);
 	m_isLoaded = false;
+	gridPosition = nullptr;
 }
 
 void Critter::Init(Vector2 position, Vector2 velocity, float radius, Texture2D texture) //const char* originally
@@ -23,8 +25,6 @@ void Critter::Init(Vector2 position, Vector2 velocity, float radius, Texture2D t
 	m_velocity = velocity;
 	m_radius = radius;
 	m_texture = texture;
-
-	//m_quadtree.Insert(new GameObject(&m_texture))
 
 	m_isLoaded = true;
 }
@@ -42,10 +42,8 @@ void Critter::Init(Vector2 position, Vector2 velocity, float radius, Texture2D t
 
 void Critter::Destroy()
 {
-	//UnloadTexture(m_texture);
 	m_isLoaded = false;
-	
-	
+	gridPosition = nullptr;
 }
 
 void Critter::Update(float dt)
