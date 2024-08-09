@@ -27,6 +27,7 @@
 #include <iostream>
 
 #include "AABB.h"
+#include "ObjectPool.h"
 
 
 float SquareDist(Vector2 a, Vector2 b)
@@ -34,26 +35,7 @@ float SquareDist(Vector2 a, Vector2 b)
     return ((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y));
 }
 
-Critter BeginOfArray(Critter critterArray[], int CRITTER_COUNT, int critterAlive)
-{
-    Critter alive = critterArray[critterAlive];
-    for (int n = critterAlive; n > 0; --n)
-    {
-        critterArray[n] = critterArray[n - 1];
-    }
-    critterArray[0] = alive;
-    return critterArray[0];
-}
-Critter EndOfArray(Critter critterArray[], int CRITTER_COUNT, int critterDead)
-{
-    Critter dead = critterArray[critterDead];
-    for (int n = critterDead; n < CRITTER_COUNT; ++n)
-    {
-        critterArray[n] = critterArray[n + 1];
-    }
-    critterArray[CRITTER_COUNT - 1] = dead;
-    return critterArray[CRITTER_COUNT - 1];
-}
+
 
 
 
@@ -74,7 +56,7 @@ int main(int argc, char* argv[])
 
     srand(time(NULL));
 
-    Critter critters[1000];
+    //Critter critters[1000];
     AABB particians[16];
     int n = 0;
 
@@ -95,6 +77,7 @@ int main(int argc, char* argv[])
 
     int crittersAlive = CRITTER_COUNT;
     int crittersDead = 0;
+    ObjectPool<Critter> critters(1000);
 
     for (int i = 0; i < CRITTER_COUNT; i++)
     {
@@ -216,7 +199,7 @@ int main(int argc, char* argv[])
 	                critters[i].Destroy();
 	                crittersDead++;
 	                // this would be the perfect time to put the critter into an object pool
-	                critters[CRITTER_COUNT - 1] = EndOfArray(critters, CRITTER_COUNT, i);
+	                critters.EndOfArray(i);
 	            }
             }
         }
@@ -266,7 +249,7 @@ int main(int argc, char* argv[])
                 pos = Vector2Add(pos, Vector2Scale(normal, -50));
                 // its pretty ineficient to keep reloading textures. ...if only there was something else we could do
 
-                critters[0] = BeginOfArray(critters, CRITTER_COUNT, CRITTER_COUNT - 1);
+                critters.BeginOfArray();
 
                 critters[0].Init(pos, Vector2Scale(normal, -MAX_VELOCITY), 12, critterTexture);
                 crittersDead--;
